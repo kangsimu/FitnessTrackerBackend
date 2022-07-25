@@ -32,7 +32,7 @@ try {
   FROM users
   WHERE username=$1 AND password=$2;
   `, [username, password]);
-  console.log(user)
+  
   return user
 } catch (error) {
   console.error(error)
@@ -40,7 +40,18 @@ try {
 }
 
 async function getUserById(userId) {
-
+try {
+  const {
+    rows: [user],
+  } = await client.query(`
+  SELECT id, username     
+  FROM users
+  WHERE id=${userId};
+  `);
+  return user
+} catch (error) {
+  console.error(error)
+}
 }
 
 async function getUserByUsername(username) {
