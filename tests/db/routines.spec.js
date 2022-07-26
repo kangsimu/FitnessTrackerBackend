@@ -107,13 +107,13 @@ describe("DB Routines", () => {
 
   afterAll(async () => {
     client.query(`
-        DELETE FROM routine_activities;
+        DELETE FROM RoutineActivities;
         DELETE FROM routines;
         DELETE FROM activities;
       `);
   });
 
-  /****Before writing the functions for these tests, go to routine_activities.js
+  /****Before writing the functions for these tests, go to RoutineActivities.js
      and write the addActivityToRoutine function.****/
 
   describe("createRoutine", () => {
@@ -166,7 +166,7 @@ describe("DB Routines", () => {
       expect(routine.creatorName).toEqual(fakeUser.username);
     });
 
-    it("includes duration and count on activities, from routine_activities join", async () => {
+    it("includes duration and count on activities, from RoutineActivities join", async () => {
       const routines = await getAllRoutines();
       const routine = routines.find((routine) => routine.id === fakeRoutine.id);
       const activity = routine.activities.find(
@@ -216,7 +216,7 @@ describe("DB Routines", () => {
       expect(routine.creatorName).toEqual(fakeUser.username);
     });
 
-    xit("includes duration and count on activities, from routine_activities join", async () => {
+    xit("includes duration and count on activities, from RoutineActivities join", async () => {
       const routines = await getAllPublicRoutines();
       const routine = routines.find((routine) => routine.id === fakeRoutine.id);
       const activity = routine.activities.find(
@@ -272,7 +272,7 @@ describe("DB Routines", () => {
       expect(routine.creatorName).toEqual(fakeUser.username);
     });
 
-    xit("includes duration and count on activities, from routine_activities join", async () => {
+    xit("includes duration and count on activities, from RoutineActivities join", async () => {
       const routines = await getAllRoutinesByUser(fakeUser);
       const routine = routines.find((routine) => routine.id === fakeRoutine.id);
       const activity = routine.activities.find(
@@ -323,7 +323,7 @@ describe("DB Routines", () => {
       expect(routine.creatorName).toEqual(fakeUser.username);
     });
 
-    xit("includes duration and count on activities, from routine_activities join", async () => {
+    xit("includes duration and count on activities, from RoutineActivities join", async () => {
       const routines = await getPublicRoutinesByUser(fakeUser);
       const routine = routines.find((routine) => routine.id === fakeRoutine.id);
       const activity = routine.activities.find(
@@ -386,7 +386,7 @@ describe("DB Routines", () => {
       expect(routine.creatorName).toEqual(fakeUser.username);
     });
 
-    xit("includes duration and count on activities, from routine_activities join", async () => {
+    xit("includes duration and count on activities, from RoutineActivities join", async () => {
       const routines = await getPublicRoutinesByActivity(fakeActivity);
       const routine = routines.find((routine) => routine.id === fakeRoutine.id);
       const activity = routine.activities.find(
@@ -469,7 +469,7 @@ describe("DB Routines", () => {
       expect(routine).toBeFalsy();
     });
 
-    xit("Deletes all the routine_activities whose routine is the one being deleted.", async () => {
+    xit("Deletes all the RoutineActivities whose routine is the one being deleted.", async () => {
       const { fakeRoutines, fakeRoutineActivities } =
         await createFakeUserWithRoutinesAndActivities("Jackie");
       const fakeRoutine = fakeRoutines[0];
@@ -481,7 +481,7 @@ describe("DB Routines", () => {
       } = await client.query(
         `
           SELECT *
-          from routine_activities
+          from RoutineActivities
           WHERE id = $1;
         `,
         [fakeRoutineActivity.id]

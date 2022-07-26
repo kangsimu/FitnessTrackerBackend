@@ -150,13 +150,13 @@ async function createInitialRoutines() {
 }
 
 async function createInitialRoutineActivities() {
-  console.log("starting to create routine_activities...")
+  console.log("starting to create RoutineActivities...")
   const [bicepRoutine, chestRoutine, legRoutine, cardioRoutine] =
     await getRoutinesWithoutActivities()
   const [bicep1, bicep2, chest1, chest2, leg1, leg2, leg3] =
     await getAllActivities()
 
-  const routineActivitiesToCreate = [
+  const RoutineActivitiesToCreate = [
     {
       routineId: bicepRoutine.id,
       activityId: bicep1.id,
@@ -212,11 +212,11 @@ async function createInitialRoutineActivities() {
       duration: 15,
     },
   ]
-  const routineActivities = await Promise.all(
-    routineActivitiesToCreate.map(addActivityToRoutine)
+  const RoutineActivities = await Promise.all(
+    RoutineActivitiesToCreate.map(addActivityToRoutine)
   )
-  console.log("routine_activities created: ", routineActivities)
-  console.log("Finished creating routine_activities!")
+  console.log("RoutineActivities created: ", RoutineActivities)
+  console.log("Finished creating RoutineActivities!")
 }
 
 async function rebuildDB() {

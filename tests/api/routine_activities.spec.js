@@ -24,8 +24,8 @@ const {
 
 const { objectContaining } = expect;
 
-describe("/api/routine_activities", () => {
-  describe("PATCH /api/routine_activities/:routineActivityId (**)", () => {
+describe("/api/RoutineActivities", () => {
+  describe("PATCH /api/RoutineActivities/:routineActivityId (**)", () => {
     xit("Updates the count or duration on the routine activity", async () => {
       const { fakeUser, token } = await createFakeUserWithToken("Smith");
       const fakeRoutine = await createFakePublicRoutine(
@@ -48,7 +48,7 @@ describe("/api/routine_activities", () => {
       };
 
       const response = await request(app)
-        .patch(`/api/routine_activities/${fakeRoutineActivity.id}`)
+        .patch(`/api/RoutineActivities/${fakeRoutineActivity.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send(updatedRoutineActivityData);
 
@@ -85,7 +85,7 @@ describe("/api/routine_activities", () => {
 
       // That user tries to modify the routine activity
       const response = await request(app)
-        .patch(`/api/routine_activities/${fakeRoutineActivity.id}`)
+        .patch(`/api/RoutineActivities/${fakeRoutineActivity.id}`)
         .set("Authorization", `Bearer ${secondUserToken}`)
         .send(updatedRoutineActivityData);
 
@@ -96,7 +96,7 @@ describe("/api/routine_activities", () => {
     });
   });
 
-  describe("DELETE /api/routine_activities/:routineActivityId (**)", () => {
+  describe("DELETE /api/RoutineActivities/:routineActivityId (**)", () => {
     xit("Removes an activity from a routine, uses hard delete", async () => {
       const { fakeUser, token } = await createFakeUserWithToken("Linus");
       const fakeRoutine = await createFakePublicRoutine(
@@ -114,7 +114,7 @@ describe("/api/routine_activities", () => {
       );
 
       const response = await request(app)
-        .delete(`/api/routine_activities/${fakeRoutineActivity.id}`)
+        .delete(`/api/RoutineActivities/${fakeRoutineActivity.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expectNotToBeError(response.body);
@@ -146,7 +146,7 @@ describe("/api/routine_activities", () => {
         await createFakeUserWithToken("Charlie");
 
       const response = await request(app)
-        .delete(`/api/routine_activities/${fakeRoutineActivity.id}`)
+        .delete(`/api/RoutineActivities/${fakeRoutineActivity.id}`)
         .set("Authorization", `Bearer ${secondUserToken}`);
       expect(response.status).toEqual(403);
 

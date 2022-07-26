@@ -58,26 +58,14 @@ async function getRoutinesWithoutActivities() {
 
 async function getAllRoutines() {
   try {
-  // const {
-  //   rows
-  // } = await client.query(`
-  // SELECT routines.id, routines."creatorId", routines."isPublic", routines.name,
-  //  routines.goal, users.username AS "creatorName", to_json((SELECT RoutineActivities FROM (SELECT  "routineId", duration, count) RoutineActivities)) AS activities
-  // FROM routines
-  // JOIN users ON users.id=routines."creatorId"
-  // JOIN activities ON activities.id=routines.id 
-  // JOIN RoutineActivities ON RoutineActivities.id=activities.id;
-  // `);
-  // console.log(rows)
-  // return rows
+
   const {rows} = await client.query(
-    `SELECT * 
-    FROM routines;
+    `SELECT routines.*, users.username AS "creatorName"
+    FROM routines
+    JOIN users ON users.id=routines."creatorId";
     `
   )
-  console.log(rows, "!!!")
   const routines = await attachActivitiesToRoutines(rows)
-  console.log(routines)
   return routines
 } catch (error) {
   console.error(error)

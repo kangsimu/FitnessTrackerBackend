@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// PATCH /api/routine_activities/:routineActivityId
+// PATCH /api/RoutineActivities/:routineActivityId
 
-// DELETE /api/routine_activities/:routineActivityId
+// DELETE /api/RoutineActivities/:routineActivityId
 
 module.exports = router;
