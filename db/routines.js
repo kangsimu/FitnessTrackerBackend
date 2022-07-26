@@ -47,18 +47,64 @@ async function getRoutinesWithoutActivities() {
       WHERE  routines.id = RoutineActivities.id
       );
     `);
-    console.log("These are your routines without activities", routine)
+    //maybe run, double check for sure
     return routine
   } catch (error) {
     console.error(error)
   }
 }
 
-async function getAllRoutines() {}
+async function getAllRoutines() {
+  try {
+  const {
+    rows
+  } = await client.query(`
+  SELECT *
+  FROM routines 
+  JOIN activities ON activities.id=routines.id 
+  JOIN RoutineActivities ON RoutineActivities.id=activities.id
+  JOIN users ON users.id=routines."creatorId";
+  `);
+  console.log(rows)
+  return rows
+} catch (error) {
+  console.error(error)
+}}
 
-async function getAllPublicRoutines() {}
+async function getAllPublicRoutines() {
+  try {
+    const {
+      rows: [routines],
+    } = await client.query(`
+    SELECT *   
+    FROM routines
+    WHERE "isPublic"=true;
+    `);
+    
+    return routines
+  } catch (error) {
+    console.error(error)
+  }  
+}
 
-async function getAllRoutinesByUser({ username }) {}
+async function getAllRoutinesByUser({ username }) {
+  try {
+    const {
+      rows: [routines],
+    } = await client.query(
+      `
+      SELECT routines."creatorId"
+      FROM routines
+      JOIN users ON users."creatorId"=users.id
+      WHERE users.username=$1;`
+    ,
+      [username]
+    );
+    console.log(routines)
+    return routines;
+  } catch (error) {
+    console.error(error) }
+}
 
 async function getPublicRoutinesByUser({ username }) {}
 
