@@ -172,7 +172,22 @@ async function updateRoutine({ id, ...fields }) {
   }
 }
 
-async function destroyRoutine(id) {}
+async function destroyRoutine(id) {
+  await client.query(
+    `
+    DELETE FROM RoutineActivities
+    WHERE "routineId"=$1
+  `,
+    [id]
+  );
+  await client.query(
+    `
+    DELETE FROM routines
+    WHERE id=$1
+  `,
+    [id]
+  );
+}
 
 module.exports = {
   getRoutineById,
