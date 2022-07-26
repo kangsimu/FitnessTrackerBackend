@@ -75,12 +75,12 @@ async function attachActivitiesToRoutines(routines) {
   if (!routineIds?.length) return [];
   
   try {
-    // get the activities, JOIN with routine_activities (so we can get a routineId), and only those that have those routine ids on the routine_activities join
+    // get the activities, JOIN with RoutineActivities (so we can get a routineId), and only those that have those routine ids on the RoutineActivities join
     const { rows: activities } = await client.query(`
-      SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId"
+      SELECT activities.*, RoutineActivities.duration, RoutineActivities.count, RoutineActivities.id AS "routineActivityId", RoutineActivities."routineId"
       FROM activities 
-      JOIN routine_activities ON routine_activities."activityId" = activities.id
-      WHERE routine_activities."routineId" IN (${ binds });
+      JOIN RoutineActivities ON RoutineActivities."activityId" = activities.id
+      WHERE RoutineActivities."routineId" IN (${ binds });
     `, routineIds);
 
     // loop over the routines
