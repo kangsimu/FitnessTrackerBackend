@@ -59,11 +59,12 @@ async function getAllRoutines() {
   const {
     rows
   } = await client.query(`
-  SELECT *
-  FROM routines 
+  SELECT routines.id, routines."creatorId", routines."isPublic", routines.name,
+   routines.goal, users.username AS "creatorName", to_json((SELECT RoutineActivities FROM (SELECT  "routineId", duration, count) RoutineActivities)) AS activities
+  FROM routines
+  JOIN users ON users.id=routines."creatorId"
   JOIN activities ON activities.id=routines.id 
-  JOIN RoutineActivities ON RoutineActivities.id=activities.id
-  JOIN users ON users.id=routines."creatorId";
+  JOIN RoutineActivities ON RoutineActivities.id=activities.id;
   `);
   console.log(rows)
   return rows
