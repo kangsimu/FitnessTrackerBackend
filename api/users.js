@@ -1,7 +1,9 @@
 /* eslint-disable no-useless-catch */
 const express = require("express");
 const router = express.Router();
-const {createUser, getUserByUsername} = require("../db")
+const {createUser, getUserByUsername, getUser} = require("../db")
+const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 
 // POST /api/users/register
 router.post("/register", async (req, res, next) => {
@@ -24,12 +26,14 @@ router.post("/register", async (req, res, next) => {
             error: 'There was an error'
         })
     } 
-    console.log("about to create user")
     const user = await createUser({username, password})
-    console.log("created user")
-    
+    const token = jwt.sign(
+        { id: user.id, username: user.username },
+        process.env.JWT_SECRET
+      );
+
     res.send({
-        token: "tokenIsHere",
+        token: token,
         user: user,
         message: "Thank you for signing up!"
     })
@@ -41,6 +45,45 @@ router.post("/register", async (req, res, next) => {
 
 
 // POST /api/users/login
+
+router.post("/login", async (req, res, next) => {
+    const { username, password } = req.body;
+  
+    // request must have both
+    if (!username || !password) {
+      next({
+        name: "MissingCredentialsError",
+        message: "Please supply both a username and password",
+      });
+    }
+  
+    try {
+    const user = await getUser({username, password});
+    const hashedPassword = user.password;
+    const passwordsMatch = await bcrypt.compare(password, hashedPassword);
+
+      if (user && passwordsMatch) {
+
+        delete user.password
+
+        const token = jwt.sign(
+          { id: user.id, username: user.username },
+          process.env.JWT_SECRET
+        );
+ 
+        res.send({ message: "you're logged in!", token: token , user:user});
+
+      } else {
+        next({
+          name: "IncorrectCredentialsError",
+          message: "Username or password is incorrect",
+        });
+      }
+    } catch ({ name, message }) {
+        next({ name, message })
+    }
+  });
+
 
 // GET /api/users/me
 
