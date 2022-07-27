@@ -89,8 +89,8 @@ async function getAllPublicRoutines() {
 }
 
 async function getAllRoutinesByUser({ username }) {
-  try {
 
+  try {
     const {rows} = await client.query(
       `SELECT routines.*, users.username AS "creatorName"
       FROM routines
@@ -99,6 +99,7 @@ async function getAllRoutinesByUser({ username }) {
       `, [username]
     )
     const routines = await attachActivitiesToRoutines(rows)
+    console.log("All routines: ", routines)
     return routines
   } catch (error) {
     console.error(error)
@@ -106,6 +107,7 @@ async function getAllRoutinesByUser({ username }) {
 }
 
 async function getPublicRoutinesByUser({ username }) {
+
   try {
 
     const {rows} = await client.query(
@@ -116,6 +118,8 @@ async function getPublicRoutinesByUser({ username }) {
       `, [username]
     )
     const routines = await attachActivitiesToRoutines(rows)
+    console.log("Only public routines", routines)
+
     return routines
   } catch (error) {
     console.error(error)
