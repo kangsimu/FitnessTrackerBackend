@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-// GET /api/health
+// GET /api/health  
 router.get('/health', async (req, res, next) => {
+    res.send("All is well, server is running")
 });
 
 // ROUTER: /api/users
@@ -18,7 +19,7 @@ const routinesRouter = require('./routines');
 router.use('/routines', routinesRouter);
 
 // ROUTER: /api/RoutineActivities
-const RoutineActivitiesRouter = require('./RoutineActivities');
-router.use('/RoutineActivities', RoutineActivitiesRouter);
+const RoutineActivitiesRouter = require('./routineActivities');
+router.use('/routineActivities', RoutineActivitiesRouter);
 
 module.exports = router;
