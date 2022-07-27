@@ -10,5 +10,12 @@ app.use(express.json());
 app.use(cors())
 app.use("/api", router)
 client.connect()
-
+router.use((error, req, res, next) => {
+    res.send({
+        name: error.name,
+        message: error.message,
+        error: error.error
+    });
+  });
+  
 module.exports = app;
