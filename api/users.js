@@ -86,19 +86,20 @@ router.post("/login", async (req, res, next) => {
   });
 
 
-// GET /api/users/me
 
+
+// GET /api/users/me
 
 router.get('/me', requireUser, async (req, res, next)=>{
 
     const prefix = "Bearer ";
     const auth = req.header("Authorization");
     const token = auth.slice(prefix.length);
+
       try {
         const { id } = jwt.verify(token, process.env.JWT_SECRET)
         if (id) {
-          const user = await getUserById(id);
-          res.send({body: user})
+          res.send(await getUserById(id));
         } 
       } catch ({ name, message }) {
         next({ name, message, status: 401 });
