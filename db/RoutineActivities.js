@@ -97,7 +97,6 @@ async function canEditRoutineActivity(routineActivityId, userId) {
 try {
   const {
     rows
-   
   } = await client.query(`
   SELECT RoutineActivities.*   
   FROM RoutineActivities
