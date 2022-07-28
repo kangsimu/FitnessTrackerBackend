@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 const express = require("express");
 const router = express.Router();
-const {createUser, getUserByUsername, getUser, getUserById, getAllRoutinesByUser, getAllPublicRoutines} = require("../db")
+const {createUser, getUserByUsername, getUser, getUserById, getAllRoutinesByUser, getAllPublicRoutines, getPublicRoutinesByUser} = require("../db")
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const {requireUser} = require('./utils')
@@ -110,26 +110,31 @@ router.get('/me', requireUser, async (req, res, next)=>{
 
 // GET /api/users/:username/routines
 router.get('/:username/routines', async(req,res,next)=>{
-    if (req.user){
-        let userName = req.user.username
-        try {
-            const allRoutines = await getAllRoutinesByUser(userName)
-            res.send({allRoutines})
     
-        } catch ({ name, message }) {
-            next({ name, message, status: 401 });
-        }
-    }
-    if (req.params){
         let userName = req.params.username
-        try {
-            const allRoutines = await getAllPublicRoutines(userName)
-            res.send({allRoutines})
-    
+        
+        if (req.params.username != req.user.username) {
+          const userObj = {username:userName}
+          try { 
+            const allRoutines = await getPublicRoutinesByUser(userObj)
+            res.send(allRoutines)
+       
         } catch ({ name, message }) {
             next({ name, message, status: 401 });
         }
-    }
+      
+        }
+        if (req.user.username === req.params.username) {
+          let userName = req.user.username
+          const userObj = {username:userName}
+          try { 
+            const allRoutines = await getAllRoutinesByUser(userObj)
+            res.send(allRoutines)
+       
+        } catch ({ name, message }) {
+            next({ name, message, status: 401 });
+        } 
+        }
    
    
 })
