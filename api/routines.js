@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getAllPublicRoutines, createRoutine, getRoutineById, updateRoutine, destroyRoutine} = require('../db')
+const {getAllPublicRoutines, createRoutine, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine, getRoutineActivityById} = require('../db')
 const {requireUser} = require('./utils')
 
 
@@ -25,7 +25,6 @@ router.post("/", requireUser, async (req,res,next) => {
     } catch ({ name, message }) {
         next({ name, message, status: 401 });
     }
-    
 })
 
 // PATCH /api/routines/:routineId
@@ -74,5 +73,30 @@ try {
 
 
 // POST /api/routines/:routineId/activities
+router.post("/:routineId/activities", async (req, res,next)=>{
+    const routineId = Number(req.params.routineId)
+    const { activityId, count, duration } = req.body;
+
+    const obj = {routineId:routineId,
+        activityId:activityId,
+        count:count,
+        duration:duration}
+    try {
+        const _routine = await getRoutineActivityById(activityId)
+        if (_routine){
+            res.status(403)
+        next({
+            name: 'You are not the Owner',
+            message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
+            error: 'There was an error'            
+        })
+        }
+        const activity = await addActivityToRoutine(obj)
+        res.send(activity)
+    } catch ({ name, message }) {
+        next({ name, message, status: 401 });
+    }
+})
+
 
 module.exports = router;
