@@ -10,20 +10,6 @@ function requireUser(req, res, next) {
     next();
   }
   
-  function requireActiveUser(req, res, next) {
-    if (req.user) {
-      if(!req.user.active) {
-        next(JSON.stringify({
-          name: "ActivationError",
-          message: "Your account must be active in order to perform this action",
-        }));
-      } else {
-        next();      
-      }
-    }
-  }
-  
-  module.exports = {
-    requireUser,
-    requireActiveUser
-  };
+module.exports = {
+  requireUser
+};
