@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getAllActivities, createActivity, getActivityByName, updateActivity} = require('../db')
+const {getAllActivities, createActivity, getActivityByName, updateActivity, getActivityById} = require('../db')
 const {requireUser, requireActiveUser} = require('./utils')
 // GET /api/activities/:activityId/routines
 
@@ -34,23 +34,22 @@ router.post("/", requireUser, async (req,res,next) => {
 }) 
 
 // PATCH /api/activities/:activityId
-router.patch("/:routineId", requireUser, async (req,res,next) => {
+router.patch("/:activityId", requireUser, async (req,res,next) => {
     try {
-        const id = req.params.routineId
+        const id = req.params.activityId
         const { name, description } = req.body;
-        const _activity = await getActivityByName(name)
-        
+        const _activity = await getActivityById(id)
+        const __activity = await getActivityByName(name)
         if (!_activity) {
             next({
                 name: 'ActivityExistsError',
                 message: `Activity ${id} not found`,
                 error: 'There was an error'
             })   
-        }  
-        if (_activity.name === name ) {
+        } else if (__activity) {
             next({
                 name: 'ActivityExistsError',
-                message: `An activity with name ${_activity.name} already exists`,
+                message: `An activity with name ${name} already exists`,
                 error: 'There was an error'
             })   
         } else {
