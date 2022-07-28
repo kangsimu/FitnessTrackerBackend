@@ -60,10 +60,8 @@ router.post("/login", async (req, res, next) => {
   
     try {
     const user = await getUser({username, password});
-    const hashedPassword = user.password;
-    const passwordsMatch = await bcrypt.compare(password, hashedPassword);
 
-      if (user && passwordsMatch) {
+      if (user) {
 
         delete user.password
 

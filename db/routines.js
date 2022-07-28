@@ -136,7 +136,7 @@ async function getPublicRoutinesByActivity({ id }) {
     const routines = await attachActivitiesToRoutines(rows);
 
     const newRoutine = routines.filter((routine) => {
-      return routine.activities.length != 0;
+      return routine.activities.length > 1;
     });
 
     return newRoutine;

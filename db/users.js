@@ -34,7 +34,7 @@ async function getUser({ username, password }) {
       const {
         rows: [user],
       } = await client.query(`
-      SELECT * 
+      SELECT id, username
       FROM users
       WHERE username=$1 AND password=$2;
       `, [username, hashedPassword]);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getAllPublicRoutines, createRoutine, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine, getRoutineActivityById} = require('../db')
+const {getAllPublicRoutines, createRoutine, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine, getRoutineActivityById, getRoutineActivitiesByRoutine} = require('../db')
 const {requireUser} = require('./utils')
 
 
@@ -75,23 +75,26 @@ try {
 // POST /api/routines/:routineId/activities
 router.post("/:routineId/activities", async (req, res,next)=>{
     const routineId = Number(req.params.routineId)
+    // const objId = {id:routineId}
+
     const { activityId, count, duration } = req.body;
 
-    const obj = {routineId:routineId,
+    const addObj = {routineId:routineId,
         activityId:activityId,
         count:count,
         duration:duration}
     try {
         const _routine = await getRoutineActivityById(activityId)
+
         if (_routine){
             res.status(403)
         next({
-            name: 'You are not the Owner',
-            message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
+            name: 'Error',
+            message: `Activity ID ${activityId} already exists in Routine ID ${_routine.routineId}`,
             error: 'There was an error'            
         })
         }
-        const activity = await addActivityToRoutine(obj)
+        const activity = await addActivityToRoutine(addObj)
         res.send(activity)
     } catch ({ name, message }) {
         next({ name, message, status: 401 });

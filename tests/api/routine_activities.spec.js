@@ -26,7 +26,7 @@ const { objectContaining } = expect;
 
 describe("/api/RoutineActivities", () => {
   describe("PATCH /api/RoutineActivities/:routineActivityId (**)", () => {
-    xit("Updates the count or duration on the routine activity", async () => {
+    it("Updates the count or duration on the routine activity", async () => {
       const { fakeUser, token } = await createFakeUserWithToken("Smith");
       const fakeRoutine = await createFakePublicRoutine(
         fakeUser.id,
@@ -57,7 +57,7 @@ describe("/api/RoutineActivities", () => {
       expect(response.body).toMatchObject(updatedRoutineActivityData);
     });
 
-    xit("should return an error if the owner of the routine isn't the one trying to edit it", async () => {
+    it("should return an error if the owner of the routine isn't the one trying to edit it", async () => {
       const { fakeUser } = await createFakeUserWithToken("Lauren");
 
       const fakeRoutine = await createFakePublicRoutine(
