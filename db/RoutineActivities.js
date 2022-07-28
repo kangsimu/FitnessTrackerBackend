@@ -86,7 +86,7 @@ async function destroyRoutineActivity(id) {
     `
     DELETE FROM RoutineActivities
     WHERE id=$1
-    RETURNING id;
+    RETURNING *;
   `,
     [id]
   );
