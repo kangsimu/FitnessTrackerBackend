@@ -4,8 +4,7 @@ const client = require("./client");
 async function createActivity({ name, description }) {
   // return the new activity
   try {
- 
-      const {rows} = await client.query(
+    const { rows } = await client.query(
       `
         INSERT INTO activities(name, description) 
         VALUES($1, $2) 
@@ -16,24 +15,22 @@ async function createActivity({ name, description }) {
     );
     return rows[0];
   } catch (error) {
-    console.error(error)  
+    console.error(error);
   }
 }
 
 async function getAllActivities() {
   try {
-    const {
-      rows
-    } = await client.query(
+    const { rows } = await client.query(
       `
       SELECT *
       FROM activities
     `
     );
 
-    return rows ;
+    return rows;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -46,47 +43,55 @@ async function getActivityById(id) {
     FROM activities
     WHERE id=${id};
     `);
-    return activity
+    return activity;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
 async function getActivityByName(name) {
   try {
     const {
-      rows: [activity]
-    } = await client.query(`
+      rows: [activity],
+    } = await client.query(
+      `
     SELECT *   
     FROM activities
     WHERE name=$1;
-    `, [name]);
-    return activity
+    `,
+      [name]
+    );
+    return activity;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
 async function attachActivitiesToRoutines(routines) {
   // no side effects
   const routinesToReturn = [...routines];
-  const binds = routines.map((_, index) => `$${index + 1}`).join(', ');
-  const routineIds = routines.map(routine => routine.id);
+  const binds = routines.map((_, index) => `$${index + 1}`).join(", ");
+  const routineIds = routines.map((routine) => routine.id);
   if (!routineIds?.length) return [];
-  
+
   try {
     // get the activities, JOIN with RoutineActivities (so we can get a routineId), and only those that have those routine ids on the RoutineActivities join
-    const { rows: activities } = await client.query(`
+    const { rows: activities } = await client.query(
+      `
       SELECT activities.*, RoutineActivities.duration, RoutineActivities.count, RoutineActivities.id AS "routineActivityId", RoutineActivities."routineId"
       FROM activities 
       JOIN RoutineActivities ON RoutineActivities."activityId" = activities.id
-      WHERE RoutineActivities."routineId" IN (${ binds });
-    `, routineIds);
+      WHERE RoutineActivities."routineId" IN (${binds});
+    `,
+      routineIds
+    );
 
     // loop over the routines
-    for(const routine of routinesToReturn) {
+    for (const routine of routinesToReturn) {
       // filter the activities to only include those that have this routineId
-      const activitiesToAdd = activities.filter(activity => activity.routineId === routine.id);
+      const activitiesToAdd = activities.filter(
+        (activity) => activity.routineId === routine.id
+      );
       // attach the activities to each single routine
       routine.activities = activitiesToAdd;
     }
@@ -97,8 +102,7 @@ async function attachActivitiesToRoutines(routines) {
 }
 
 async function updateActivity({ id, ...fields }) {
-
-    const setString = Object.keys(fields)
+  const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
 

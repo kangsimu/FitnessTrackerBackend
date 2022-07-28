@@ -19,7 +19,7 @@ async function addActivityToRoutine({
     );
     return routine;
   } catch (error) {
-    console.error(error)  
+    console.error(error);
   }
 }
 
@@ -32,24 +32,25 @@ async function getRoutineActivityById(id) {
     FROM RoutineActivities
     WHERE id=${id};
     `);
-    return routine
+    return routine;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
 async function getRoutineActivitiesByRoutine({ id }) {
   try {
-    const {
-      rows
-    } = await client.query(`
+    const { rows } = await client.query(
+      `
     SELECT *    
     FROM RoutineActivities
     WHERE "routineId"=$1;
-    `, [id]);
-    return rows
+    `,
+      [id]
+    );
+    return rows;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -82,7 +83,9 @@ async function updateRoutineActivity({ id, ...fields }) {
 }
 
 async function destroyRoutineActivity(id) {
-  const {rows: [routine]} = await client.query(
+  const {
+    rows: [routine],
+  } = await client.query(
     `
     DELETE FROM RoutineActivities
     WHERE id=$1
@@ -90,26 +93,27 @@ async function destroyRoutineActivity(id) {
   `,
     [id]
   );
-  return routine
+  return routine;
 }
 
 async function canEditRoutineActivity(routineActivityId, userId) {
-try {
-  const {
-    rows
-  } = await client.query(`
+  try {
+    const { rows } = await client.query(
+      `
   SELECT RoutineActivities.*   
   FROM RoutineActivities
   JOIN routines ON routines.id=RoutineActivities."routineId"
   WHERE "creatorId"=$1;
-  `, [userId]);
-  if (rows.length === 0) {
-    return false 
+  `,
+      [userId]
+    );
+    if (rows.length === 0) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error(error);
   }
-  return true
-} catch (error) {
-  console.error(error)
-}
 }
 
 module.exports = {
